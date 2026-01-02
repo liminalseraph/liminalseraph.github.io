@@ -2,14 +2,13 @@
 
 import { useEffect, useRef, useState } from "react";
 
-const folders = ["Bio", "Projects", "Research", "Blog"];
+const folders = ["Bio", "Projects", "Research", "Blog", "Notes"];
 const LAUNCH_DURATION = 560;
 const PAGE_FADE_DURATION = 560;
 
 export default function Home() {
   const [activePage, setActivePage] = useState<string | null>(null);
   const [launching, setLaunching] = useState<string | null>(null);
-  const [homeHidden, setHomeHidden] = useState(false);
   const [pageVisible, setPageVisible] = useState(false);
   const timersRef = useRef<number[]>([]);
 
@@ -28,12 +27,6 @@ export default function Home() {
     setActivePage(label);
     setPageVisible(true);
     setLaunching(label);
-    timersRef.current.push(
-      window.setTimeout(() => {
-        setHomeHidden(true);
-        setLaunching(null);
-      }, LAUNCH_DURATION)
-    );
   };
 
   const handleBack = () => {
@@ -43,14 +36,18 @@ export default function Home() {
     timersRef.current.push(
       window.setTimeout(() => {
         setActivePage(null);
-        setHomeHidden(false);
+        setLaunching(null);
       }, PAGE_FADE_DURATION)
     );
   };
 
   return (
     <div className="app">
-      <section className={`home-view ${homeHidden ? "is-hidden" : ""}`}>
+      <section
+        className="home-view"
+        aria-hidden={pageVisible}
+        style={{ pointerEvents: pageVisible ? "none" : "auto" }}
+      >
         <div className="stack" aria-hidden={pageVisible}>
           {folders.map((label, index) => {
             const isLaunching = launching === label;
@@ -77,7 +74,7 @@ export default function Home() {
                     role="img"
                     aria-label={`${label} folder`}
                   >
-                    <path d="M248 56H144L126 40H12V168H248Z" />
+                    <path d="M248 56H128L110 40H12V168H248Z" />
                   </svg>
                 </span>
               </button>
@@ -93,7 +90,8 @@ export default function Home() {
         <header className="page-header">
           <div className="page-label">{activePage ?? ""}</div>
           <button className="back-button" type="button" onClick={handleBack}>
-            Back
+            <span aria-hidden="true">⌃</span>
+            <span className="sr-only">Back</span>
           </button>
         </header>
         <main className="page-content">

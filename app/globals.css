@@ -3,6 +3,7 @@
 :root {
   --background: #000;
   --foreground: #fff;
+  --page-overlay: rgba(0, 0, 0, 0.82);
   --stroke-width: 2px;
   --stack-offset-x: 28px;
   --stack-offset-y: 36px;
@@ -52,15 +53,6 @@ button {
   justify-content: center;
 }
 
-.home-view {
-  transition: opacity var(--fade-duration) ease;
-}
-
-.home-view.is-hidden {
-  opacity: 0;
-  pointer-events: none;
-}
-
 .stack {
   position: relative;
   width: min(80vw, 420px);
@@ -106,7 +98,7 @@ button {
 
 .folder__label {
   position: absolute;
-  top: 18px;
+  top: 50px;
   left: 24px;
   font-size: 0.85rem;
   font-weight: 500;
@@ -149,7 +141,7 @@ button {
   align-items: stretch;
   justify-content: flex-start;
   padding: 48px 56px;
-  background: var(--background);
+  background: var(--page-overlay);
   opacity: 0;
   pointer-events: none;
   transition: opacity var(--launch-duration) ease;
@@ -170,31 +162,45 @@ button {
 }
 
 .page-label {
+  font-size: clamp(1.4rem, 2.8vw, 2.2rem);
   font-weight: 500;
 }
 
 .back-button {
-  border: 1px solid var(--foreground);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border: none;
   background: transparent;
   color: var(--foreground);
-  padding: 8px 16px;
-  border-radius: 999px;
-  font-size: 0.85rem;
-  letter-spacing: 0.08em;
+  padding: 0;
+  border-radius: 0;
+  font-size: clamp(1.6rem, 2.4vw, 2rem);
+  line-height: 1;
   cursor: pointer;
-  transition: background 200ms ease, color 200ms ease;
+  transition: opacity 200ms ease;
 }
 
 .back-button:hover,
 .back-button:focus-visible {
-  background: var(--foreground);
-  color: var(--background);
+  opacity: 0.7;
 }
 
 .page-content {
   margin-top: 120px;
   font-size: 1.1rem;
   max-width: 640px;
+}
+
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  border: 0;
 }
 
 @media (max-width: 640px) {
@@ -208,13 +214,14 @@ button {
   }
 
   .folder__label {
-    top: 14px;
+    top: 36px;
     left: 20px;
     font-size: 0.78rem;
   }
 }
 
 @media (prefers-reduced-motion: reduce) {
+
   .folder,
   .page-view,
   .home-view {
