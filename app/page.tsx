@@ -11,7 +11,7 @@ export default function Home() {
   const [launching, setLaunching] = useState<string | null>(null);
   const [homeHidden, setHomeHidden] = useState(false);
   const [pageVisible, setPageVisible] = useState(false);
-  const timersRef = useRef<Array<ReturnType<typeof setTimeout>>>([]);
+  const timersRef = useRef<number[]>([]);
 
   const clearTimer = () => {
     timersRef.current.forEach((timer) => window.clearTimeout(timer));
