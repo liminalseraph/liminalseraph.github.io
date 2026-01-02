@@ -1,15 +1,20 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
+import { blog, projects, research, type DetailItem } from "./data/items";
 
 const folders = ["Bio", "Projects", "Research", "Blog", "Notes"];
 const LAUNCH_DURATION = 560;
 const PAGE_FADE_DURATION = 560;
 
+const sortByYear = (items: DetailItem[]) =>
+  [...items].sort((a, b) => b.year - a.year);
+
 export default function Home() {
   const [activePage, setActivePage] = useState<string | null>(null);
   const [launching, setLaunching] = useState<string | null>(null);
   const [pageVisible, setPageVisible] = useState(false);
+  const [selectedId, setSelectedId] = useState<string | null>(null);
   const timersRef = useRef<number[]>([]);
 
   const clearTimer = () => {
@@ -21,6 +26,10 @@ export default function Home() {
     return () => clearTimer();
   }, []);
 
+  useEffect(() => {
+    setSelectedId(null);
+  }, [activePage]);
+
   const handleFolderClick = (label: string) => {
     if (launching || pageVisible) return;
     clearTimer();
@@ -29,7 +38,7 @@ export default function Home() {
     setLaunching(label);
   };
 
-  const handleBack = () => {
+  const handleBack = useCallback(() => {
     if (!pageVisible) return;
     clearTimer();
     setPageVisible(false);
@@ -39,7 +48,18 @@ export default function Home() {
         setLaunching(null);
       }, PAGE_FADE_DURATION)
     );
-  };
+  }, [pageVisible]);
+
+  useEffect(() => {
+    if (!pageVisible) return;
+    const handleKeyDown = (event: KeyboardEvent) => {
+      if (event.key === "Escape") {
+        handleBack();
+      }
+    };
+    window.addEventListener("keydown", handleKeyDown);
+    return () => window.removeEventListener("keydown", handleKeyDown);
+  }, [handleBack, pageVisible]);
 
   return (
     <div className="app">
@@ -95,9 +115,72 @@ export default function Home() {
           </button>
         </header>
         <main className="page-content">
-          <p>{activePage ? `${activePage} content goes here.` : ""}</p>
+          {activePage === "Projects" ||
+          activePage === "Research" ||
+          activePage === "Blog" ? (
+            <PageDetails
+              items={sortByYear(
+                activePage === "Projects"
+                  ? projects
+                  : activePage === "Research"
+                    ? research
+                    : blog
+              )}
+              selectedId={selectedId}
+              onSelect={setSelectedId}
+            />
+          ) : (
+            <p>{activePage ? `${activePage} content goes here.` : ""}</p>
+          )}
         </main>
       </section>
+    </div>
+  );
+}
+
+function PageDetails({
+  items,
+  selectedId,
+  onSelect,
+}: {
+  items: DetailItem[];
+  selectedId: string | null;
+  onSelect: (id: string | null) => void;
+}) {
+  const selectedItem = items.find((item) => item.id === selectedId) ?? null;
+
+  return (
+    <div className="split-layout">
+      <div className="item-list">
+        {items.map((item) => (
+          <button
+            key={item.id}
+            type="button"
+            className={`item-button ${selectedId === item.id ? "is-active" : ""}`}
+            onClick={() => onSelect(item.id)}
+          >
+            <span className="item-logo">{item.logoText}</span>
+            <span className="item-meta">
+              <span className="item-title">{item.title}</span>
+              <span className="item-year">{item.year}</span>
+            </span>
+          </button>
+        ))}
+      </div>
+      <div className="item-divider" aria-hidden="true" />
+      <div className="item-detail">
+        {selectedItem ? (
+          <>
+            <h2 className="detail-title">{selectedItem.title}</h2>
+            <p className="detail-summary">{selectedItem.summary}</p>
+            <div className="detail-image">
+              <span>{selectedItem.imageLabel}</span>
+            </div>
+          </>
+        ) : (
+          <div className="detail-placeholder">[SELECT]</div>
+        )}
+      </div>
     </div>
   );
 }
