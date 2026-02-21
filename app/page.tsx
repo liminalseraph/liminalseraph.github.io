@@ -4,7 +4,6 @@ import { useCallback, useEffect, useRef, useState } from "react";
 import { blog, projects, research, type DetailItem } from "./data/items";
 
 const folders = ["Bio", "Projects", "Research", "Blog", "Notes"];
-const LAUNCH_DURATION = 560;
 const PAGE_FADE_DURATION = 560;
 
 const sortByYear = (items: DetailItem[]) =>
@@ -26,14 +25,11 @@ export default function Home() {
     return () => clearTimer();
   }, []);
 
-  useEffect(() => {
-    setSelectedId(null);
-  }, [activePage]);
-
   const handleFolderClick = (label: string) => {
     if (launching || pageVisible) return;
     clearTimer();
     setActivePage(label);
+    setSelectedId(null);
     setPageVisible(true);
     setLaunching(label);
   };
@@ -78,7 +74,7 @@ export default function Home() {
                 className={`folder ${isLaunching ? "is-launching" : ""} ${isDimmed ? "is-dimmed" : ""}`}
                 style={
                   {
-                    "--offset-x": `${index * 28}px`,
+                    "--offset-x": "0px",
                     "--offset-y": `${index * 36}px`,
                     "--stack-index": `${index + 1}`,
                   } as React.CSSProperties
@@ -87,7 +83,6 @@ export default function Home() {
                 type="button"
               >
                 <span className="folder__body">
-                  <span className="folder__label">{label}</span>
                   <svg
                     className="folder__svg"
                     viewBox="0 0 260 180"
@@ -95,6 +90,9 @@ export default function Home() {
                     aria-label={`${label} folder`}
                   >
                     <path d="M248 56H128L110 40H12V168H248Z" />
+                    <text className="folder__label" x="22" y="48" fontSize={12}>
+                      {label}
+                    </text>
                   </svg>
                 </span>
               </button>
