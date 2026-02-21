@@ -5,7 +5,7 @@
   --foreground: #fff;
   --page-overlay: rgba(0, 0, 0, 0.82);
   --stroke-width: 2px;
-  --stack-offset-x: 28px;
+  --stack-offset-x: 0px;
   --stack-offset-y: 36px;
   --lift-y: -18px;
   --launch-duration: 560ms;
@@ -97,14 +97,13 @@ button {
 }
 
 .folder__label {
-  position: absolute;
-  top: 50px;
-  left: 24px;
-  font-size: 0.85rem;
+  font-family: var(--font-space-grotesk), "Helvetica Neue", Arial, sans-serif;
   font-weight: 500;
   letter-spacing: 0.08em;
-  color: var(--foreground);
+  fill: var(--foreground);
+  dominant-baseline: middle;
   pointer-events: none;
+  user-select: none;
 }
 
 .folder:not(.is-launching):hover,
@@ -129,7 +128,7 @@ button {
 }
 
 .folder.is-launching .folder__body {
-  transform: translate(0, -120vh) scale(1.02);
+  transform: translate(120vw, 0) scale(1.02);
 }
 
 .folder.is-dimmed {
@@ -318,12 +317,6 @@ button {
   .stack {
     width: min(88vw, 360px);
     height: min(70vh, 320px);
-  }
-
-  .folder__label {
-    top: 36px;
-    left: 20px;
-    font-size: 0.78rem;
   }
 
   .split-layout {
