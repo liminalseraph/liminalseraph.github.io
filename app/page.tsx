@@ -4,7 +4,6 @@ import { useCallback, useEffect, useRef, useState } from "react";
 import { blog, projects, research, type DetailItem } from "./data/items";
 
 const folders = ["Bio", "Projects", "Research", "Blog", "Notes"];
-const LAUNCH_DURATION = 560;
 const PAGE_FADE_DURATION = 560;
 
 const sortByYear = (items: DetailItem[]) =>
@@ -26,14 +25,11 @@ export default function Home() {
     return () => clearTimer();
   }, []);
 
-  useEffect(() => {
-    setSelectedId(null);
-  }, [activePage]);
-
   const handleFolderClick = (label: string) => {
     if (launching || pageVisible) return;
     clearTimer();
     setActivePage(label);
+    setSelectedId(null);
     setPageVisible(true);
     setLaunching(label);
   };
