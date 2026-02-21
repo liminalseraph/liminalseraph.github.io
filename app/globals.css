@@ -337,6 +337,27 @@ button {
   }
 }
 
+@media (hover: none) {
+  .folder:not(.is-launching):hover,
+  .folder:not(.is-launching):focus-visible {
+    filter: none;
+  }
+
+  .folder:not(.is-launching):hover .folder__body {
+    transform: translate(0, 0);
+    filter: none;
+  }
+
+  .item-button:hover {
+    border-color: rgba(255, 255, 255, 0.2);
+    transform: none;
+  }
+
+  .back-button:hover {
+    opacity: 1;
+  }
+}
+
 @media (prefers-reduced-motion: reduce) {
 
   .folder,
