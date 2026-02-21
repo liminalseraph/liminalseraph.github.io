@@ -74,8 +74,7 @@ export default function Home() {
                 className={`folder ${isLaunching ? "is-launching" : ""} ${isDimmed ? "is-dimmed" : ""}`}
                 style={
                   {
-                    "--offset-x": "0px",
-                    "--offset-y": `${index * 36}px`,
+                    "--folder-index": `${index}`,
                     "--stack-index": `${index + 1}`,
                   } as React.CSSProperties
                 }
@@ -90,7 +89,7 @@ export default function Home() {
                     aria-label={`${label} folder`}
                   >
                     <path d="M248 56H128L110 40H12V168H248Z" />
-                    <text className="folder__label" x="22" y="48" fontSize={12}>
+                    <text className="folder__label" x="22" y="51" fontSize={12}>
                       {label}
                     </text>
                   </svg>

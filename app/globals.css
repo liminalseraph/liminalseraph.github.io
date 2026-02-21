@@ -63,8 +63,11 @@ button {
   --motion-duration: 200ms;
   position: absolute;
   top: 0;
-  left: 0;
-  transform: translate(var(--offset-x), var(--offset-y));
+  left: 50%;
+  transform: translate(
+    calc(-50% + var(--folder-index) * var(--stack-offset-x)),
+    calc(var(--folder-index) * var(--stack-offset-y))
+  );
   transition:
     opacity 200ms ease,
     filter 200ms ease;
@@ -317,6 +320,7 @@ button {
   .stack {
     width: min(88vw, 360px);
     height: min(70vh, 320px);
+    --stack-offset-x: 8px;
   }
 
   .split-layout {
